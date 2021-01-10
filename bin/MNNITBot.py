@@ -55,14 +55,15 @@ Eg :- !REG 2020CA001""")
 
     async def start_request_poll(self, message):
         request = message.content[8:].strip()
-        await message.channel.purge(limit=1)
-        await message.channel.send(f"""{message.author.name} requested for:
+        channel = message.channel
+        await channel.purge(limit=1)
+        await channel.send(f"""{message.author.name} requested for:
 **{request}**
 
 Vote in the below poll.
 
 """)
-        await message.channel.send(f"""/poll "{request}" """)
+        await channel.send(f"""/poll "{request}" """)
 
     async def registration(self, message):
         user_roll = re.findall("20[0-9]{2}CA[0-9]{3}", message.content)[0]
