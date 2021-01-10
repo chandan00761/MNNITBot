@@ -53,6 +53,9 @@ Here is the format:
 !REG <year>CA<roll>
 Eg :- !REG 2020CA001""")
 
+    def is_me(self, m):
+        return m.author == self.user
+
     async def start_request_poll(self, message):
         request = message.content[8:].strip()
         channel = message.channel
@@ -63,6 +66,7 @@ Eg :- !REG 2020CA001""")
 Vote in the below poll.
 
 """)
+        await channel.purge(limit=1, check=self.is_me)
         await channel.send(f"""/poll "{request}" """)
 
     async def registration(self, message):
