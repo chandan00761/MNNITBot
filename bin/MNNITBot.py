@@ -57,9 +57,10 @@ Eg :- !REG 2020CA001""")
         request = message.content[8:].strip()
         await message.channel.purge(limit=1)
         await message.channel.send(f"""{message.author.name} requested for:
-{request}
-
-You can react with :+1: to upvote or :-1: to downvote""")
+**{request}**
+""")
+        await message.channel.last_message.add_reaction(":+1:")
+        await message.channel.last_message.add_reaction(":-1:")
 
     async def registration(self, message):
         user_roll = re.findall("20[0-9]{2}CA[0-9]{3}", message.content)[0]
