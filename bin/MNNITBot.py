@@ -56,7 +56,7 @@ Eg :- !REG 2020CA001""")
     async def start_request_poll(self, message):
         request = message.content[8:].strip()
         await message.channel.purge(limit=1)
-        await message.reply(f"""{message.author.name} requested for:
+        await message.channel.send(f"""{message.author.name} requested for:
 {request}
 
 You can react with :+1: to upvote or :-1: to downvote""")
