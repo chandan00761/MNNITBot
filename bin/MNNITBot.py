@@ -11,6 +11,8 @@ class MNNITBot(discord.Client):
         self.temp_role = None
         self.admin = None
         self.admin_role = None
+        self.request_channel = None
+        self.test_channel = None
         self.student_file = os.path.join(os.getcwd(), file)
         with open(file) as f:
             self.student_data = json.load(f)
@@ -21,6 +23,8 @@ class MNNITBot(discord.Client):
         self.temp_role = discord.utils.get(self.guilds[0].roles, name="temp")
         self.admin = self.guilds[0].get_member_named("Hola_Bola_Mdfkr#9935")
         self.admin_role = discord.utils.get(self.guilds[0].roles, name="Administrator")
+        self.request_channel = discord.utils.get(self.guilds[0].channels, name="requests")
+        self.test_channel = discord.utils.get(self.guilds[0].channels, name="test")
         print(f'{self.user} has connected to Discord')
 
     async def on_member_join(self, member):
@@ -48,6 +52,16 @@ To access the full server reply your registration number here.
 Here is the format: 
 !REG <year>CA<roll>
 Eg :- !REG 2020CA001""")
+
+    async def start_request_poll(self, message):
+        request = message.content[8:].strip()
+        await message.channel.purge(limit=1)
+        await message.reply(
+            f"""{message.author.name} requested for:
+{request}
+
+You can react with :+1: to upvote or :-1: to downvote"""
+        )
 
     async def registration(self, message):
         user_roll = re.findall("20[0-9]{2}CA[0-9]{3}", message.content)[0]
@@ -82,3 +96,5 @@ then contact the administrator {self.admin.mention} or tell in the WhatsApp grou
         elif isinstance(message.channel, discord.TextChannel):
             if message.content == "!clear" and self.admin_role in message.author.roles:
                 await self.clear_message(message.channel)
+            if message.content.startswith("!request") and message.channel.id == self.test_channel.id:
+                await self.start_request_poll(message)
